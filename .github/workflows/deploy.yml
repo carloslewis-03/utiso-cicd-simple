@@ -1,0 +1,60 @@
+name: Build, Scan & Deploy
+
+# Runs on every push to main, and can also be run by hand from the Actions tab.
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Least privilege: start read-only. The deploy job below asks for more, only where needed.
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # 1) Security gate: scan the code (and its history) for committed secrets.
+  # ---------------------------------------------------------------------------
+  security:
+    name: Secret Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # full history so the scanner can inspect past commits
+
+      - name: Scan for committed secrets (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ---------------------------------------------------------------------------
+  # 2) Deploy the static site to GitHub Pages.
+  #    'needs: security' means this only runs if the secret scan passed.
+  # ---------------------------------------------------------------------------
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: security
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write            # required to publish to GitHub Pages
+      id-token: write         # required for the secure (OIDC) deployment handshake
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site as a Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .               # publish the repository root (where index.html lives)
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
