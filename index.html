@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UTISO CI/CD Demo</title>
+  <style>
+    :root { --navy: #1f3864; --bg: #f7f8fa; --ink: #1a1a1a; --muted: #5c6470; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    .wrap { max-width: 680px; margin: 0 auto; padding: 64px 24px; }
+    header { border-bottom: 3px solid var(--navy); padding-bottom: 16px; margin-bottom: 24px; }
+    h1 { color: var(--navy); margin: 0 0 4px; font-size: 1.9rem; }
+    .sub { color: var(--muted); margin: 0; }
+    h2 { color: var(--navy); font-size: 1.15rem; margin-top: 32px; }
+    ul { padding-left: 20px; }
+    li { margin-bottom: 6px; }
+    .pill {
+      display: inline-block; background: var(--navy); color: #fff;
+      border-radius: 999px; padding: 4px 12px; font-size: .8rem; margin-top: 8px;
+    }
+    footer { margin-top: 40px; color: var(--muted); font-size: .85rem; border-top: 1px solid #ddd; padding-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>UTISO CI/CD Demo</h1>
+      <p class="sub">A simple static site published by a secure GitHub Actions pipeline.</p>
+      <span class="pill">Deployed via GitHub Actions</span>
+    </header>
+
+    <main>
+      <p>
+        This page is intentionally simple. The point of the repository is the
+        <strong>CI/CD pipeline</strong> that publishes it, not the page itself.
+      </p>
+
+      <h2>What the pipeline does</h2>
+      <ul>
+        <li><strong>Scans for secrets</strong> in the code before anything ships (Gitleaks).</li>
+        <li><strong>Deploys to GitHub Pages</strong> &mdash; but only if the secret scan passes.</li>
+      </ul>
+
+      <h2>Why it matters</h2>
+      <p>
+        Every change is checked automatically and published the same way every
+        time, with a security gate in front of the deploy. No manual steps, no
+        forgotten checks.
+      </p>
+    </main>
+
+    <footer>
+      Built as a take-home exercise &middot; Source and pipeline live in this repository.
+    </footer>
+  </div>
+</body>
+</html>
