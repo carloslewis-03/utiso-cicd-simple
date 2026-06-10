@@ -4,6 +4,8 @@ name: Build, Scan & Deploy
 on:
   push:
     branches: [ main ]
+  pull_request: 
+    branches: [main]
   workflow_dispatch:
 
 # Least privilege: start read-only. The deploy job below asks for more, only where needed.
